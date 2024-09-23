@@ -1,0 +1,20 @@
+name: Deploy Addition Script
+
+on:
+  push:
+    branches: [ main, Develop ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+
+    - name: Deploy script
+      run: python deploy.py
