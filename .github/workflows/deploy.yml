@@ -2,48 +2,72 @@ name: Deploy Python Script
 
 on: [push]
 
-permissions:
-  contents: write
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./dist
+    - uses: actions/checkout@v2
 
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
         python-version: '3.x'
 
-    - name: Check working directory
-      run: |
-        pwd
-        ls -la
-
-    - name: Check for deploy.py
-      run: |
-        if [ -f deploy.py ]; then
-          echo "deploy.py exists"
-        else
-          echo "deploy.py does not exist"
-          ls -la
-        fi
-
-    - name: List repository contents
-      run: |
-        find $GITHUB_WORKSPACE
-
     - name: Run deploy script
       run: python $GITHUB_WORKSPACE/deploy.py
 
-    - name: Push changes
-      uses: ad-m/github-push-action@master
+    - name: Upload deployment artifact
+      uses: actions/upload-artifact@v2
       with:
-          github_token: ${{ secrets.GITHUB_PAT }}
-          branch: gh-pages
+        name: deployed-files
+        path: ${{ github.workspace }}/deploy_output
+
+# name: Deploy Python Script
+
+# on: [push]
+
+# permissions:
+#   contents: write
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#     - uses: actions/checkout@v3
+#     - name: Deploy to GitHub Pages
+#       uses: peaceiris/actions-gh-pages@v3
+#       with:
+#         github_token: ${{ secrets.GITHUB_TOKEN }}
+#         publish_dir: ./dist
+
+#     - name: Set up Python
+#       uses: actions/setup-python@v2
+#       with:
+#         python-version: '3.x'
+
+#     - name: Check working directory
+#       run: |
+#         pwd
+#         ls -la
+
+#     - name: Check for deploy.py
+#       run: |
+#         if [ -f deploy.py ]; then
+#           echo "deploy.py exists"
+#         else
+#           echo "deploy.py does not exist"
+#           ls -la
+#         fi
+
+#     - name: List repository contents
+#       run: |
+#         find $GITHUB_WORKSPACE
+
+#     - name: Run deploy script
+#       run: python $GITHUB_WORKSPACE/deploy.py
+
+#     - name: Push changes
+#       uses: ad-m/github-push-action@master
+#       with:
+#           github_token: ${{ secrets.GITHUB_PAT }}
+#           branch: gh-pages

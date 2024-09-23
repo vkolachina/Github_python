@@ -2,8 +2,8 @@ import os
 import subprocess
 
 def deploy():
-    # Define the path where you want to deploy your script
-    deploy_path = "/path/to/deployment/directory"
+    # Use a path within the GitHub workspace
+    deploy_path = os.path.join(os.environ.get('GITHUB_WORKSPACE', ''), 'deploy_output')
 
     # Create the deployment directory if it doesn't exist
     os.makedirs(deploy_path, exist_ok=True)
@@ -15,7 +15,7 @@ def deploy():
 
     # Optional: Run the script to test it
     print("Testing the deployed script:")
-    result = subprocess.run(["python", f"{deploy_path}/add.py"], 
+    result = subprocess.run(["python", os.path.join(deploy_path, "add.py")], 
                             input="5\n3\n", 
                             text=True, 
                             capture_output=True)
