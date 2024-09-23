@@ -1,20 +1,35 @@
-name: Deploy Addition Script
+name: Deploy Python Script
 
-on:
-  push:
-    branches: [ main, Develop ]
+on: [push]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
 
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.9'
+        python-version: '3.x'
 
-    - name: Deploy script
-      run: python deploy.py
+    - name: Check working directory
+      run: |
+        pwd
+        ls -la
+
+    - name: Check for deploy.py
+      run: |
+        if [ -f deploy.py ]; then
+          echo "deploy.py exists"
+        else
+          echo "deploy.py does not exist"
+          ls -la
+        fi
+
+    - name: List repository contents
+      run: |
+        find $GITHUB_WORKSPACE
+
+    - name: Run deploy script
+      run: python $GITHUB_WORKSPACE/deploy.py
